@@ -1,0 +1,46 @@
+sprint_number: 1
+sprint_goal: "完成 Pixel Art Refiner 项目的全部功能，包括 API 服务、Web 界面和部署准备。"
+start_date: "2026-02-26"
+end_date: "2026-03-04"
+total_epics: 1
+total_stories: 7
+completed_stories: 7
+stories:
+  - id: "STORY-000"
+    title: "开发环境搭建"
+    status: "completed"
+    story_points: 2
+    completion_date: "2026-02-26"
+  - id: "STORY-001"
+    title: "基础 API 架构"
+    status: "completed"
+    story_points: 2
+    completion_date: "2026-02-26"
+  - id: "STORY-002"
+    title: "图片处理功能"
+    status: "completed"
+    story_points: 3
+    completion_date: "2026-02-26"
+  - id: "STORY-003"
+    title: "前端界面开发"
+    status: "completed"
+    story_points: 2
+    completion_date: "2026-02-26"
+  - id: "STORY-004"
+    title: "Docker 容器化"
+    status: "completed"
+    story_points: 1
+    completion_date: "2026-02-26"
+  - id: "STORY-005"
+    title: "测试和优化"
+    status: "completed"
+    story_points: 2
+    completion_date: "2026-02-26"
+  - id: "STORY-006"
+    title: "文档完善"
+    status: "completed"
+    story_points: 2
+    completion_date: "2026-02-26"
+in_progress: []
+remaining_points: 0
+velocity: 14

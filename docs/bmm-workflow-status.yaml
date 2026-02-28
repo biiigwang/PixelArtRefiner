@@ -1,0 +1,60 @@
+created_at: "2026-02-26T10:45:00"
+project_name: "Pixel Art Refiner"
+project_type: "web-app"
+project_level: 1
+
+phases:
+  phase1:
+    product_brief:
+      status: "docs/product-brief-pixel-art-refiner-20260226.md"
+      last_updated: "2026-02-26T10:46:00"
+  phase2:
+    tech_spec:
+      status: "docs/tech-spec-pixel-art-refiner-20260226.md"
+      last_updated: "2026-02-26T10:48:00"
+  phase3:
+    architecture:
+      status: "optional"
+      last_updated: "2026-02-26T10:46:00"
+  phase4:
+    sprint_planning:
+      status: "docs/sprint-plan-pixel-art-refiner-20260226.md"
+      last_updated: "2026-02-26T11:00:00"
+
+current_phase: 4
+
+stories:
+  - id: "STORY-000"
+    name: "开发环境搭建"
+    status: "completed"
+    completed_at: "2026-02-26"
+  - id: "STORY-001"
+    name: "基础 API 架构"
+    status: "completed"
+    completed_at: "2026-02-26"
+  - id: "STORY-002"
+    name: "图片处理功能"
+    status: "completed"
+    completed_at: "2026-02-26"
+  - id: "STORY-003"
+    name: "前端界面开发"
+    status: "completed"
+    completed_at: "2026-02-26"
+  - id: "STORY-004"
+    name: "Docker 容器化"
+    status: "configuration_complete"
+    note: "Dockerfile 和 docker-compose.yml 已配置完成，待网络恢复后构建验证"
+    completed_at: "2026-02-26"
+  - id: "STORY-005"
+    name: "测试和优化"
+    status: "completed"
+    completed_at: "2026-02-26"
+  - id: "STORY-006"
+    name: "文档完善"
+    status: "completed"
+    completed_at: "2026-02-26"
+
+workflow_path:
+  - phase1: product_brief (Recommended)
+  - phase2: tech_spec (Required)
+  - phase4: sprint_planning → stories

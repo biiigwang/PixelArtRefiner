@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  pixel-art-refiner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pixel-art-refiner
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped

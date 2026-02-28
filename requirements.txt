@@ -1,0 +1,24 @@
+# Pixel Art Refiner 项目依赖
+
+# 核心 Web 框架和服务器
+fastapi==0.104.1
+uvicorn==0.24.0.post1
+python-multipart==0.0.6
+
+# 图片处理和算法库
+# 本地子模块安装
+-e ./perfectPixel[opencv]
+numpy==1.24.3
+opencv-python==4.8.1.78
+
+# 文件类型检测
+python-magic==0.4.27
+
+# 开发和调试工具
+pytest==7.4.3
+pytest-cov==4.1.0
+flake8==6.1.0
+black==23.11.0
+
+# 其他工具
+python-jose==3.3.0

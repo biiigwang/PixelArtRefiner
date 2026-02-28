@@ -1,0 +1,25 @@
+
+build/
+dist/
+*.egg-info/
+
+venv/
+.venv/
+env/
+
+output/
+
+*.log
+
+.DS_Store
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build

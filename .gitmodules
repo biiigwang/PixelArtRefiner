@@ -1,0 +1,3 @@
+[submodule "perfectPixel"]
+	path = perfectPixel
+	url = https://github.com/theamusing/perfectPixel.git

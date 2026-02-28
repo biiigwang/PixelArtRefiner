@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Art Refiner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px dashed #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #4facfe;
+            background: #e7f1ff;
+        }
+
+        .upload-area {
+            text-align: center;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .upload-btn:active {
+            transform: translateY(0);
+        }
+
+        .file-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .params-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .params-section h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+
+        .param-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .param-group {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .param-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .param-group input,
+        .param-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .param-group input:focus,
+        .param-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .process-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .process-btn {
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .process-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+        }
+
+        .process-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-section h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+
+        .images-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .image-box h4 {
+            margin-bottom: 15px;
+            color: #495057;
+            font-size: 1.2rem;
+        }
+
+        .image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-item .label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .download-section {
+            text-align: center;
+        }
+
+        .download-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .error-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #ffc107;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .error-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .error-section h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .error-section p {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .param-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .images-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Pixel Art Refiner</h1>
+            <p>将 AI 生成的伪像素画转换为完美对齐的像素艺术</p>
+        </div>
+
+        <div class="main-content">
+            <div class="upload-section">
+                <div class="upload-area">
+                    <input type="file" id="imageInput" accept="image/*">
+                    <label for="imageInput" class="upload-btn">
+                        📁 选择图片文件
+                    </label>
+                    <div class="file-info" id="fileInfo">请选择 PNG、JPEG 或 WebP 格式的图片</div>
+                </div>
+            </div>
+
+            <div class="params-section">
+                <h3>⚙️ 参数配置</h3>
+                <div class="param-grid">
+                    <div class="param-group">
+                        <label for="sampleMethod">采样方法</label>
+                        <select id="sampleMethod">
+                            <option value="center">中心采样</option>
+                            <option value="median">中位数采样</option>
+                            <option value="majority">多数采样</option>
+                        </select>
+                    </div>
+                    <div class="param-group">
+                        <label for="minSize">最小像素尺寸 (px)</label>
+                        <input type="number" id="minSize" value="4.0" step="0.1" min="1.0" max="20.0">
+                    </div>
+                    <div class="param-group">
+                        <label for="peakWidth">峰宽</label>
+                        <input type="number" id="peakWidth" value="6" step="1" min="1" max="20">
+                    </div>
+                    <div class="param-group">
+                        <label for="refineIntensity">细化强度</label>
+                        <input type="number" id="refineIntensity" value="0.25" step="0.05" min="0.0" max="1.0">
+                    </div>
+                    <div class="param-group">
+                        <label for="fixSquare">修正正方形</label>
+                        <select id="fixSquare">
+                            <option value="true">是</option>
+                            <option value="false">否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-section">
+                <button class="process-btn" id="processBtn" onclick="processImage()">
+                    🚀 开始处理
+                </button>
+            </div>
+
+            <div class="error-section" id="errorSection">
+                <h4>❌ 错误</h4>
+                <p id="errorMessage"></p>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <h3>📊 处理结果</h3>
+
+                <div class="result-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="label">原始尺寸</div>
+                            <div class="value" id="originalSize">--</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">优化后尺寸</div>
+                            <div class="value" id="refinedSize">--</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">像素尺寸</div>
+                            <div class="value" id="pixelSize">--</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">处理时间</div>
+                            <div class="value" id="processingTime">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="images-container">
+                    <div class="image-box">
+                        <h4>原始图片</h4>
+                        <img id="originalImage" src="" alt="原始图片">
+                    </div>
+                    <div class="image-box">
+                        <h4>优化后图片</h4>
+                        <img id="refinedImage" src="" alt="优化后图片">
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <a href="" id="downloadBtn" class="download-btn" download>
+                        📥 下载优化后图片
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                const fileSize = (selectedFile.size / 1024 / 1024).toFixed(2);
+                document.getElementById('fileInfo').textContent =
+                    `${selectedFile.name} (${fileSize} MB)`;
+
+                // 显示预览
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('originalImage').src = e.target.result;
+                };
+                reader.readAsDataURL(selectedFile);
+            }
+        });
+
+        async function processImage() {
+            if (!selectedFile) {
+                showError('请先选择图片文件');
+                return;
+            }
+
+            const processBtn = document.getElementById('processBtn');
+            const originalBtnText = processBtn.innerHTML;
+
+            processBtn.innerHTML = '<span class="loading"></span>处理中...';
+            processBtn.disabled = true;
+            hideError();
+            hideResults();
+
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+            formData.append('sample_method', document.getElementById('sampleMethod').value);
+            formData.append('min_size', document.getElementById('minSize').value);
+            formData.append('peak_width', document.getElementById('peakWidth').value);
+            formData.append('refine_intensity', document.getElementById('refineIntensity').value);
+            formData.append('fix_square', document.getElementById('fixSquare').value === 'true');
+
+            try {
+                const startTime = Date.now();
+
+                const response = await fetch('/api/v1/process', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || '处理失败');
+                }
+
+                const result = await response.json();
+                const processingTime = ((Date.now() - startTime) / 1000).toFixed(2);
+
+                // 更新结果信息
+                document.getElementById('originalSize').textContent =
+                    `${result.original_size[0]} × ${result.original_size[1]}`;
+                document.getElementById('refinedSize').textContent =
+                    `${result.refined_size[0]} × ${result.refined_size[1]}`;
+                document.getElementById('pixelSize').textContent = `${result.pixel_size} px`;
+                document.getElementById('processingTime').textContent = `${processingTime}s`;
+
+                // 显示结果图片
+                document.getElementById('refinedImage').src = result.download_url;
+                document.getElementById('downloadBtn').href = result.download_url;
+
+                showResults();
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                processBtn.innerHTML = originalBtnText;
+                processBtn.disabled = false;
+            }
+        }
+
+        function showError(message) {
+            const errorSection = document.getElementById('errorSection');
+            const errorMessage = document.getElementById('errorMessage');
+
+            errorMessage.textContent = message;
+            errorSection.classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('errorSection').classList.remove('show');
+        }
+
+        function showResults() {
+            document.getElementById('resultsSection').classList.add('show');
+        }
+
+        function hideResults() {
+            document.getElementById('resultsSection').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
