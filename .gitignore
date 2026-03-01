@@ -13,8 +13,14 @@ output/
 
 .DS_Store
 
-# Test outputs
-output_*.png
+# Agent directories
+.agents/
+.goose/
+.trae/
+
+# Project specific
+skills-lock.json
+img/
 
 # Python
 __pycache__
