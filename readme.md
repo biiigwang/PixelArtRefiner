@@ -24,7 +24,33 @@ Pixel Art Refiner 是一个基于 Perfect Pixel 算法的 Web 服务，旨在解
 本项目使用了开源库 [perfectPixel](https://github.com/theamusing/perfectPixel) 作为核心算法（Git 子模块），感谢原作者的贡献。
 ## 快速开始
 
+### Docker 运行（推荐）
+
+#### 使用 Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+#### 使用 Docker 直接运行
+
+```bash
+# 拉取镜像
+docker pull ghcr.io/biiigwang/pixelartrefiner:latest
+
+# 运行容器
+docker run -d -p 8000:8000 ghcr.io/biiigwang/pixelartrefiner:latest
+```
+
+服务启动后访问：
+
+- Web UI: http://localhost:8000/app
+- API 文档: http://localhost:8000/docs
+- 健康检查: http://localhost:8000/api/v1/health
+
 ### 本地运行
+
+#### Python 环境
 
 ```bash
 # 克隆项目后，安装依赖
@@ -50,16 +76,20 @@ cd api
 python main.py
 ```
 
-服务启动后访问：
+#### Windows 可执行文件
 
-- Web UI: http://localhost:8000/app
-- API 文档: http://localhost:8000/docs
+1. 从 [Releases](https://github.com/biiigwang/PixelArtRefiner/releases) 下载 `PixelArtRefiner-Windows-x64.zip`
+2. 解压ZIP文件
+3. 双击运行 `PixelArtRefiner.exe`
+4. 服务启动后访问 http://localhost:8000
 
-### Docker 运行
+#### macOS 应用
 
-```bash
-docker-compose up -d
-```
+1. 从 [Releases](https://github.com/biiigwang/PixelArtRefiner/releases) 下载 `PixelArtRefiner-macOS-arm64.zip`
+2. 解压ZIP文件
+3. 打开 `PixelArtRefiner` 文件夹
+4. 双击运行 `PixelArtRefiner`（如果提示无法打开，需要在系统偏好设置中允许）
+5. 服务启动后访问 http://localhost:8000
 
 ## API 使用
 
