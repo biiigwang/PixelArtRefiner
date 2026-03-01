@@ -12,6 +12,10 @@ output/
 *.log
 
 .DS_Store
+
+# Test outputs
+output_*.png
+
 # Python
 __pycache__
 *.pyc

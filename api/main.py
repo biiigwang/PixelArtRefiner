@@ -7,14 +7,14 @@ Date: 2026-02-26
 """
 
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
+import sys
 import tempfile
 import cv2
 import numpy as np
-import sys
 from pathlib import Path
 
 # Add project root and perfect-pixel src directory to Python path for module resolution
@@ -39,6 +39,21 @@ except Exception as e:
     print(f"Python path: {sys.path}")
     raise
 
+
+def get_frontend_path():
+    """获取前端文件目录路径（支持 PyInstaller 嵌入）"""
+    # 检查是否在 PyInstaller 打包环境中
+    if hasattr(sys, '_MEIPASS'):
+        # 在打包环境中，资源在 _MEIPASS 目录下
+        base_path = Path(sys._MEIPASS)
+        frontend_path = base_path / "frontend"
+        if frontend_path.exists():
+            return frontend_path
+
+    # 开发环境
+    return PROJECT_ROOT / "frontend"
+
+
 # Create application instance
 app = FastAPI(
     title="Pixel Art Refiner API",
@@ -56,10 +71,13 @@ app.add_middleware(
 )
 
 # Mount static files for frontend
+frontend_path = get_frontend_path()
+print(f"📂 前端文件路径: {frontend_path}")
+
 app.mount(
     "/app",
     StaticFiles(
-        directory=str(PROJECT_ROOT / "frontend"), html=True
+        directory=str(frontend_path), html=True
     ),
     name="frontend",
 )
@@ -100,6 +118,7 @@ async def process_image(
     peak_width: int = Form(..., ge=1, le=20),
     refine_intensity: float = Form(..., ge=0.0, le=1.0),
     fix_square: bool = Form(True),
+    normalize_ratio: bool = Form(True),
 ):
     """
     Process an uploaded image using Perfect Pixel algorithm.
@@ -112,6 +131,7 @@ async def process_image(
         peak_width: Minimum peak width for peak detection
         refine_intensity: Intensity for grid line refinement
         fix_square: Whether to enforce output to be square when almost square
+        normalize_ratio: Whether to normalize aspect ratio. When False, preserves original ratio.
 
     Returns:
         Dictionary containing processing results and download URL
@@ -160,6 +180,7 @@ async def process_image(
             peak_width=peak_width,
             refine_intensity=refine_intensity,
             fix_square=fix_square,
+            normalize_ratio=normalize_ratio,
         )
 
         if refined_width is None or refined_height is None or output_image is None:

@@ -389,6 +389,13 @@
                             <option value="false">否</option>
                         </select>
                     </div>
+                    <div class="param-group">
+                        <label for="normalizeRatio">宽高比归一化</label>
+                        <select id="normalizeRatio">
+                            <option value="true">是</option>
+                            <option value="false">否 (保持原始比例)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -487,6 +494,7 @@
             formData.append('peak_width', document.getElementById('peakWidth').value);
             formData.append('refine_intensity', document.getElementById('refineIntensity').value);
             formData.append('fix_square', document.getElementById('fixSquare').value === 'true');
+            formData.append('normalize_ratio', document.getElementById('normalizeRatio').value === 'true');
 
             try {
                 const startTime = Date.now();
